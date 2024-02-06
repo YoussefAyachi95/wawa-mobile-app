@@ -1,10 +1,12 @@
 import { View, Text, StyleSheet, Image } from 'react-native'
-import React from 'react'
+import React, { useRef } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler'
 import { Ionicons } from '@expo/vector-icons'
 import Colors from '@/constants/Colors'
 import { Link } from 'expo-router'
+import BottomSheet from './BottomSheet'
+import { BottomSheetModal } from '@gorhom/bottom-sheet'
 
 const SearchBar = () => {
     return (
@@ -25,29 +27,37 @@ const SearchBar = () => {
 }
 
 const CustomHeader = () => {
-  return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
-        <TouchableOpacity>
-            <Image source={require('@/assets/images/logo.png')} style={styles.logo}/>
-        </TouchableOpacity>
+    const bottomSheetRef = useRef<BottomSheetModal>(null)
 
-        <TouchableOpacity style={styles.titleContainer}>
-            <Text style={styles.title}>Delivery - Now</Text>
-            <View style={styles.locationName}>
-                <Text style={styles.subtitle}>Köln</Text>
-                <Ionicons name='chevron-down' size={20} color={Colors.purple} />
+
+    const openModal = () => {
+        bottomSheetRef.current?.present()
+    }
+
+    return (
+        <SafeAreaView style={styles.safeArea}>
+            <BottomSheet ref={bottomSheetRef} />
+            <View style={styles.container}>
+                <TouchableOpacity onPress={openModal}>
+                    <Image source={require('@/assets/images/logo.png')} style={styles.logo}/>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.titleContainer} onPress={openModal}>
+                    <Text style={styles.title}>Delivery - Now</Text>
+                    <View style={styles.locationName}>
+                        <Text style={styles.subtitle}>Köln</Text>
+                        <Ionicons name='chevron-down' size={20} color={Colors.purple} />
+                    </View>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.profileButton}>
+                    <Ionicons name='person-outline' size={20} color={Colors.purple}/>
+                </TouchableOpacity>
+
             </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.profileButton}>
-            <Ionicons name='person-outline' size={20} color={Colors.purple}/>
-        </TouchableOpacity>
-
-      </View>
-      <SearchBar />
-    </SafeAreaView>
-  )
+        <SearchBar />
+        </SafeAreaView>
+    )
 }
 
 const styles = StyleSheet.create({
