@@ -1,0 +1,13 @@
+[
+    { "name": "Diapers", "count": 25 },
+    { "name": "Baby Food", "count": 30 },
+    { "name": "Clothing", "count": 40 },
+    { "name": "Toys", "count": 20 },
+    { "name": "Nursery", "count": 15 },
+    { "name": "Baby Gear", "count": 35 },
+    { "name": "Feeding Supplies", "count": 28 },
+    { "name": "Health & Safety", "count": 22 },
+    { "name": "Bathing & Skincare", "count": 18 },
+    { "name": "Books & Learning", "count": 12 },
+    { "name": "Travel Accessories", "count": 10 }
+]
