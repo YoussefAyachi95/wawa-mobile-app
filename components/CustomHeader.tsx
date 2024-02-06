@@ -16,7 +16,7 @@ const SearchBar = () => {
                     <Ionicons style={styles.searchIcon} name='ios-search' size={20} color={Colors.medium} />
                     <TextInput style={styles.textInput} placeholder='Baby products, brands, food...' />
                 </View>
-                <Link href={'/'} asChild>
+                <Link href={'/(modal)/Filter'} asChild>
                     <TouchableOpacity style={styles.optionButton}>
                         <Ionicons name='options-outline' size={20} color={Colors.purple} />
                     </TouchableOpacity>

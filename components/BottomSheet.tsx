@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
         padding: 16,
         borderColor: Colors.grey,
         borderWidth: 1,
-    }
+    },
 })
 
 export default BottomSheet
