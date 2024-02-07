@@ -38,6 +38,18 @@ export default function RootLayoutNav() {
             )
           }}
        />
+       <Stack.Screen 
+          name='(modal)/LocationSearch'
+          options={{
+            presentation: 'fullScreenModal',
+            headerTitle: 'Select Location',
+            headerLeft: () => (
+              <TouchableOpacity onPress={() => {navigation.goBack()}}>
+                <Ionicons name='close-outline' size={28} color={Colors.purple} />
+              </TouchableOpacity>
+            )
+          }}
+       />
       </Stack> 
     </BottomSheetModalProvider>
   );
