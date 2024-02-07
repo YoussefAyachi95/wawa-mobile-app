@@ -1,11 +1,12 @@
 import { View, Text, StyleSheet, ListRenderItem, Button } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Colors from '@/constants/Colors'
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler'
 import { useNavigation } from 'expo-router'
 import categories from '@/assets/data/filter.json'
 import { Ionicons } from '@expo/vector-icons'
 import BouncyCheckbox from 'react-native-bouncy-checkbox'
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 
 interface Category {
     name: string;
@@ -47,6 +48,23 @@ const ItemBox = () => (
 const Filter = () => {
     const navigation = useNavigation()
     const [items, setItems] = useState<Category[]>(categories)
+    const [selected, setSelected] = useState<Category[]>([])
+    const flexWidth = useSharedValue(0)
+    const scale = useSharedValue(0)
+
+    useEffect(() => {
+        const hasSelected = selected.length > 0
+        const selectedItems = items.filter((item) => item.checked)
+        const newSelected = selectedItems.length > 0
+
+        if (hasSelected !== newSelected) {
+            flexWidth.value = withTiming(newSelected ? 150 : 0)
+            scale.value = withTiming(newSelected ? 1 : 0)
+        }
+
+        setSelected(selectedItems)
+
+    }, [items])
 
     const handleClearAll = () => {
         const updatedItems = items.map((item) => {
@@ -57,6 +75,19 @@ const Filter = () => {
 
         setItems(updatedItems)
     }
+
+    const animatedStyles = useAnimatedStyle(() => {
+        return {
+            width: flexWidth.value,
+            opacity: flexWidth.value > 0 ? 1 : 0
+        }
+    })
+
+    const animatedText = useAnimatedStyle(() => {
+        return {
+            transform: [{ scale: scale.value }]
+        }
+    })
 
     const renderItem: ListRenderItem<Category> = ({ item, index }) => (
         <View style={styles.row}>
@@ -87,13 +118,20 @@ const Filter = () => {
 
     return (
         <View style={styles.container}>
-            <Button title='Clear All' color={Colors.purple} onPress={handleClearAll} />
             <FlatList data={items} renderItem={renderItem} ListHeaderComponent={<ItemBox />} />
             <View style={{ height: 76 }}/>
             <View style={styles.footer}>
-                <TouchableOpacity style={styles.fullButton} onPress={() => navigation.goBack()}>
-                    <Text style={styles.footerText}>Done</Text>
-                </TouchableOpacity>
+                <View style={styles.btnContainer}>
+                    <Animated.View style={[styles.outlineButton, animatedStyles]}>
+                        <TouchableOpacity onPress={handleClearAll}>
+                            <Animated.Text style={[styles.outlineButtonText, animatedText]}>Clear All</Animated.Text>
+                        </TouchableOpacity>
+                    </Animated.View>
+
+                    <TouchableOpacity style={styles.fullButton} onPress={() => navigation.goBack()}>
+                        <Text style={styles.footerText}>Done</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         </View>
     )
@@ -111,6 +149,9 @@ const styles = StyleSheet.create({
         margin: 16,
         borderRadius: 8,
         alignItems: 'center',
+        justifyContent: 'center',
+        // flex: 1,
+        height: 56,
     },
     footer: {
         position: 'absolute',
@@ -162,6 +203,25 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 10,
         backgroundColor: '#fff',
+    },
+    btnContainer:{
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: 4,
+    },
+    outlineButton: {
+        borderColor: Colors.purple,
+        borderWidth: 0.5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 8,
+        height: 56,
+    },
+    outlineButtonText: {
+        color: Colors.purple,
+        fontWeight: 'bold',
+        fontSize: 16,
     },
 })
 
