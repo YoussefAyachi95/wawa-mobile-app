@@ -1,10 +1,11 @@
-import { View, Text, StyleSheet, ListRenderItem } from 'react-native'
-import React from 'react'
+import { View, Text, StyleSheet, ListRenderItem, Button } from 'react-native'
+import React, { useState } from 'react'
 import Colors from '@/constants/Colors'
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler'
 import { useNavigation } from 'expo-router'
 import categories from '@/assets/data/filter.json'
 import { Ionicons } from '@expo/vector-icons'
+import BouncyCheckbox from 'react-native-bouncy-checkbox'
 
 interface Category {
     name: string;
@@ -45,17 +46,50 @@ const ItemBox = () => (
 
 const Filter = () => {
     const navigation = useNavigation()
+    const [items, setItems] = useState<Category[]>(categories)
 
-    const renderItem: ListRenderItem<Category> = ({ item }) => (
-        <View>
-            <Text>{item.name}</Text>
+    const handleClearAll = () => {
+        const updatedItems = items.map((item) => {
+            item.checked = false
+
+            return item
+        })
+
+        setItems(updatedItems)
+    }
+
+    const renderItem: ListRenderItem<Category> = ({ item, index }) => (
+        <View style={styles.row}>
+            <Text style={styles.itemText}>{item.name} ({item.count})</Text>
+            <BouncyCheckbox
+                isChecked={items[index].checked}
+                fillColor={Colors.purple}
+                unfillColor='#fff'
+                disableBuiltInState
+                iconStyle={{ borderColor: Colors.purple, borderRadius: 4, borderWidth: 2 }}
+                innerIconStyle={{ borderColor: Colors.purple, borderRadius: 4 }}
+                onPress={() => {
+                    const isChecked = items[index].checked
+
+                    const updatedItems = items.map((item) => {
+                        if (item.name === items[index].name) {
+                            item.checked = !isChecked
+                        }
+                        return item
+                    })
+
+                    setItems(updatedItems)
+                }}
+            />
         </View>
     )
     
 
     return (
         <View style={styles.container}>
-            <FlatList data={categories} renderItem={renderItem} ListHeaderComponent={<ItemBox />} />
+            <Button title='Clear All' color={Colors.purple} onPress={handleClearAll} />
+            <FlatList data={items} renderItem={renderItem} ListHeaderComponent={<ItemBox />} />
+            <View style={{ height: 76 }}/>
             <View style={styles.footer}>
                 <TouchableOpacity style={styles.fullButton} onPress={() => navigation.goBack()}>
                     <Text style={styles.footerText}>Done</Text>
@@ -119,6 +153,15 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         borderColor: Colors.grey,
         borderBottomWidth: 1,
+    },
+    itemText: {
+        flex: 1,
+    },
+    row: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 10,
+        backgroundColor: '#fff',
     },
 })
 
