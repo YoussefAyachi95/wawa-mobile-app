@@ -1,20 +1,35 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import MapView from 'react-native-maps'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+import { TextInput, TouchableOpacity } from 'react-native-gesture-handler'
 import Colors from '@/constants/Colors'
 import { useNavigation } from 'expo-router'
 import Autocomplete from 'react-native-autocomplete-input';
 import axios from 'axios';
+import { Ionicons } from '@expo/vector-icons'
 
 interface Prediction {
     description: string;
 }
 
+interface Location {
+    latitude: number;
+    longitude: number;
+    latitudeDelta: number;
+    longitudeDelta: number;
+}
+
+interface Geometry {
+    location: {
+        lat: number;
+        lng: number;
+    };
+}
+
 
 const LocationSearch = () => {
     const navigation = useNavigation()
-    const [location, setLocation] = useState({
+    const [location, setLocation] = useState<Location>({
         latitude: 51.5078788,
         longitude: -0.0877321,
         latitudeDelta: 0.02,
@@ -36,7 +51,7 @@ const LocationSearch = () => {
 
     const fetchSuggestions = async () => {
         try {
-            const response = await axios.get<{ predictions: Prediction[] }>(process.env.EXPO_PUBLIC_RAPID_API_URL as string, {
+            const response = await axios.get<{ predictions: Prediction[] }>(process.env.EXPO_PUBLIC_RAPID_API_URL_AUTOCOMPLETE as string, {
                 params: {
                     input: query,
                     radius: '50000'
@@ -69,21 +84,70 @@ const LocationSearch = () => {
         }
     };
 
+    const handleLocationSelection = async (selectedLocation: string) => {
+        try {
+            const response = await axios.get<{ candidates: { formatted_address: string; geometry: Geometry }[] }>(process.env.EXPO_PUBLIC_RAPID_API_KEY_SEARCH as string, {
+                params: {
+                    input: selectedLocation,
+                    inputtype: 'textquery',
+                    fields: 'formatted_address,name,rating,opening_hours,geometry'
+                },
+                headers: {
+                    'X-RapidAPI-Key': process.env.EXPO_PUBLIC_RAPID_API_KEY,
+                    'X-RapidAPI-Host': process.env.EXPO_PUBLIC_RAPID_API_HOST
+                }
+            });
+            if (response.data && response.data.candidates && response.data.candidates.length > 0) {
+                const candidate = response.data.candidates[0];
+                const { lat, lng } = candidate.geometry.location;
+                setLocation({
+                    latitude: lat,
+                    longitude: lng,
+                    latitudeDelta: 0.02,
+                    longitudeDelta: 0.02
+                });
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     return (
         <View style={{ flex: 1 }}>
             <Autocomplete
+                placeholder='Search or move the map...'
                 data={suggestions}
                 defaultValue={query}
                 onChangeText={handleInputChange}
                 onBlur={handleInputBlur}
                 flatListProps={{
-                    keyExtractor: (_, idx) => idx.toString(),
+                    keyExtractor: (_, index) => index.toString(),
                     renderItem: ({ item }) => (
-                        <TouchableOpacity onPress={() => setQuery(item)}>
-                            <Text>{item}</Text>
+                        <TouchableOpacity style={styles.autocompleteItem} onPress={() => handleLocationSelection(item)}>
+                            <Text style={styles.autocompleteText}>{item}</Text>
                         </TouchableOpacity>
                     ),
                 }}
+                containerStyle={{ flex: 0 }}
+                inputContainerStyle= {{
+                    backgroundColor: '#fff',
+                    padding: 8,
+                }}
+                listContainerStyle={styles.autocompleteListContainer}
+                renderTextInput={() => (
+                    <>
+                        <View style={styles.boxIcon}>
+                            <Ionicons name="search-outline" size={24} color={Colors.medium} />
+                        </View>
+                            <TextInput
+                                style={styles.searchInput}
+                                placeholder="Search or move the map..."
+                                value={query}
+                                onChangeText={handleInputChange}
+                                onBlur={handleInputBlur}
+                            />
+                    </>
+                )}
             />
             <MapView showsUserLocation={true} style={styles.map} region={location} />
             <View style={styles.absoluteBox}>
@@ -115,6 +179,29 @@ const styles =StyleSheet.create({
         color: '#fff',
         fontWeight: 'bold',
         fontSize: 16,
+    },
+    autocompleteListContainer: {
+        
+    },
+    autocompleteItem: {
+        width: '100%',
+        padding: 6,
+        borderBottomColor: Colors.grey,
+        borderBottomWidth: 1,
+    },
+    autocompleteText: {
+    },
+    searchInput: {
+        backgroundColor: Colors.grey,
+        paddingLeft: 35,
+        padding: 8,
+        borderRadius: 10,
+    },
+    boxIcon: {
+        position: 'absolute',
+        left: 15,
+        top: 18,
+        zIndex: 1,
     },
 })
 
