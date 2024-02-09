@@ -124,7 +124,7 @@ const LocationSearch = () => {
                     keyExtractor: (_, index) => index.toString(),
                     renderItem: ({ item }) => (
                         <TouchableOpacity style={styles.autocompleteItem} onPress={() => handleLocationSelection(item)}>
-                            <Text style={styles.autocompleteText}>{item}</Text>
+                            <Text>{item}</Text>
                         </TouchableOpacity>
                     ),
                 }}
@@ -181,15 +181,13 @@ const styles =StyleSheet.create({
         fontSize: 16,
     },
     autocompleteListContainer: {
-        
+        backgroundColor: '#fff',
     },
     autocompleteItem: {
-        width: '100%',
-        padding: 6,
+        padding: 12,
+        margin: 4,
         borderBottomColor: Colors.grey,
         borderBottomWidth: 1,
-    },
-    autocompleteText: {
     },
     searchInput: {
         backgroundColor: Colors.grey,
