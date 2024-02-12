@@ -10,7 +10,7 @@ const Shops = () => {
     <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ padding: 15 }}>
         {
             shops.map((shop, index) => (
-              <Link href={'/'} key={index} asChild>
+              <Link href={'/details'} key={index} asChild>
                 <TouchableOpacity>
                     <View style={styles.categoryCard}>
                         <Image source={shop.img} style={styles.image} />
