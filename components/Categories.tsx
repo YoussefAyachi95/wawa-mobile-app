@@ -21,10 +21,9 @@ const Categories = () => {
 const styles = StyleSheet.create({
     categoryCard: {
         width: 100,
-        height: 150,
+        height: 100,
         alignItems: 'center',
-        justifyContent: 'flex-start',
-        marginBottom: 50,
+        justifyContent: 'flex-start',        
         backgroundColor: '#fff',
         marginEnd: 10,
         elevation: 2,

@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { Text, StyleSheet } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Categories from '@/components/Categories'
@@ -9,7 +9,7 @@ import Colors from '@/constants/Colors'
 const Page = () => {
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
+      <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
         <Categories />
         <Text style={styles.header}>Top picks in your neighborhood</Text>
         <Shops />
@@ -28,9 +28,10 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 16,
+    marginTop: 16,
+    marginBottom: 10,
     paddingHorizontal: 16,
-  }
+  },
 })
 
 export default Page
