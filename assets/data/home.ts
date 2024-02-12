@@ -14,38 +14,38 @@ export const categories = [
 
 export const shops = [
     { 
-        name: "Baby One", 
+        name: "Wawa", 
         rating: "4.5 Excellent", 
         ratings: 120, 
         distance: "0.7km away", 
-        img: require('@/assets/images/shops/babyone.svg'), 
+        img: require('@/assets/images/shops/wawa.jpg'), 
         tags: ["Diapers", "Baby Gear", "Feeding Supplies"], 
         duration: "30 minutes"
     },
     { 
-        name: "Mintaha Baby", 
+        name: "Baby Shop", 
         rating: "4.3 Great", 
         ratings: 90, 
         distance: "1.2km away", 
-        img: require('@/assets/images/shops/mintahababy.png'), 
+        img: require('@/assets/images/shops/babyshop.jpg'), 
         tags: ["Clothing", "Toys", "Books & Learning"], 
         duration: "45 minutes"
     },
     { 
-        name: "Baby Botosso", 
+        name: "Babysitter", 
         rating: "4.7 Excellent", 
         ratings: 150, 
         distance: "0.5km away", 
-        img: require('@/assets/images/shops/baby-bottosso.jpg'), 
+        img: require('@/assets/images/shops/babysitter.jpg'), 
         tags: ["Clothing", "Nursery", "Bathing & Skincare"], 
         duration: "25 minutes"
     },
     { 
-        name: "Mamej", 
+        name: "Baby Shower", 
         rating: "4.2 Good", 
         ratings: 80, 
         distance: "0.9km away", 
-        img: require('@/assets/images/shops/mamej.webp'), 
+        img: require('@/assets/images/shops/babyshower.jpg'), 
         tags: ["Baby Food", "Health & Safety", "Travel Accessories"], 
         duration: "35 minutes"
     }
