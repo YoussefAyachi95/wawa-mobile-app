@@ -47,7 +47,7 @@ const Details = () => {
     }, [])
 
     const renderItem: ListRenderItem<any> = ({ item, index }) => (
-        <Link href={'/'} asChild>
+        <Link href={{ pathname: '/(modal)/Product', params: { id: item.id } }} asChild>
             <TouchableOpacity style={styles.productDetail}>
                 <View style={{ flex: 1 }}>
                     <Text style={styles.itemName}>{item.name}</Text>
