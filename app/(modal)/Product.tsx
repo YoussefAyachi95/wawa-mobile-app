@@ -7,13 +7,16 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Animated, { FadeIn, FadeInLeft } from 'react-native-reanimated'
 import * as Haptics from 'expo-haptics'
+import useBasketStore from '@/context/basketStore'
 
 const Product = () => {
     const { id } = useLocalSearchParams()
-    const item = getProductById(+id)
+    const item = getProductById(+id)!
     const router = useRouter()
+    const { addProduct } = useBasketStore()
 
     const addToCart = () => {
+        addProduct(item)
         Haptics.notificationAsync(
             Haptics.NotificationFeedbackType.Success
         )

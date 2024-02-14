@@ -7,12 +7,15 @@ import { Link, useNavigation } from 'expo-router'
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
 import { Ionicons } from '@expo/vector-icons'
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+import useBasketStore from '@/context/basketStore'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 const Details = () => {
     const navigation = useNavigation()
     const [activeIndex, setActiveIndex] = useState<number>(0)
     const scrollRef = useRef<ScrollView>(null)
     const itemsRef = useRef<View[]>([])
+    const { items, total } = useBasketStore()
     
     const opacity = useSharedValue(0)
     const animatedStyles = useAnimatedStyle(() => ({
@@ -152,6 +155,22 @@ const Details = () => {
                         </ScrollView>
                     </View>
             </Animated.View>
+
+            {
+                items > 0 && (
+                    <View style={styles.footer}>
+                        <SafeAreaView edges={['bottom']} style={{ backgroundColor: '#fff' }}>
+                            <Link href={'/basket'} asChild>
+                                <TouchableOpacity style={styles.fullButton}>
+                                    <Text style={styles.basket}>{items}</Text>
+                                    <Text style={styles.basketText}>View Basket</Text>
+                                    <Text style={styles.basketText}>{total}€</Text>
+                                </TouchableOpacity>
+                            </Link>
+                        </SafeAreaView>
+                    </View>
+                )
+            }
         </>
     )
 }
@@ -273,6 +292,41 @@ const styles = StyleSheet.create({
     segmentsTextInactive: {
         color: Colors.purple,
         fontSize: 16,
+    },
+    footer: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        width: '100%',
+        padding: 10,
+        backgroundColor: '#fff',
+        elevation: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: -10 },
+        shadowOpacity: 0.1,
+        shadowRadius: 10,
+        paddingTop: 20,
+    },
+    basket: {
+        color: '#fff',
+        backgroundColor: '#9750a6',
+        padding: 8,
+        fontWeight: 'bold',
+        borderRadius: 2,
+    },
+    basketText: {
+        color: '#fff',
+        fontWeight: 'bold',
+        fontSize: 16,
+    },
+    fullButton: {
+        backgroundColor: Colors.purple,
+        padding: 16,
+        borderRadius: 8,
+        alignItems: 'center',
+        flexDirection: 'row',
+        flex: 1,
+        justifyContent: 'space-between',
     },
 })
 
