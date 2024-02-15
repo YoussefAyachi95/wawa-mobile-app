@@ -1,9 +1,4 @@
-export const getProductById = (id: number) => {
-    const products = shop.products.flatMap((category) => category.items);
-    return products.find((product) => product.id === id);
-  };
-
-  export const shop = {
+export const shop = {
     name: 'Wawa',
     rating: '4.5 Excellent',
     ratings: '(120)',

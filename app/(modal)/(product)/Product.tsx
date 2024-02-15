@@ -10,7 +10,7 @@ import useBasketStore from '@/context/basketStore'
 
 import { productStyles as styles } from '@/app/(modal)/(product)/ProductStyle'
 
-import { getProductById } from '@/assets/data/shop'
+import { getProductById } from '@/util/getProductById'
 
 
 const Product = () => {
