@@ -1,9 +1,11 @@
-import { Stack, useNavigation } from 'expo-router';
-import CustomHeader from '@/components/CustomHeader';
-import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import Colors from '@/constants/Colors';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Stack, useNavigation } from 'expo-router';
+
+import CustomHeader from '@/components/CustomHeader/CustomHeader';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+
 import { Ionicons } from '@expo/vector-icons';
+import Colors from '@/constants/Colors';
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
@@ -23,7 +25,7 @@ export default function RootLayoutNav() {
           }}
         />
         <Stack.Screen 
-          name='(modal)/Filter'
+          name='(modal)/(filter)/Filter'
           options={{
             presentation: 'modal',
             headerTitle: 'Filter',
@@ -39,7 +41,7 @@ export default function RootLayoutNav() {
           }}
        />
        <Stack.Screen 
-          name='(modal)/LocationSearch'
+          name='(modal)/(location)/LocationSearch'
           options={{
             presentation: 'fullScreenModal',
             headerTitle: 'Select Location',
@@ -51,7 +53,7 @@ export default function RootLayoutNav() {
           }}
        />
        <Stack.Screen 
-          name='(modal)/Product'
+          name='(modal)/(product)/Product'
           options={{
             presentation: 'modal',
             headerTitle: '',
@@ -66,7 +68,7 @@ export default function RootLayoutNav() {
           }}
        />
        <Stack.Screen 
-          name='basket'
+          name='(basket)/basket'
           options={{
             headerTitle: 'Basket',
             headerLeft: () => (

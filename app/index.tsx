@@ -1,10 +1,11 @@
-import { Text, StyleSheet } from 'react-native'
-import React from 'react'
+import { Text } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import Categories from '@/components/Categories'
-import Shops from '@/components/Shops'
 import { ScrollView } from 'react-native-gesture-handler'
-import Colors from '@/constants/Colors'
+
+import Categories from '@/components/Categories/Categories'
+import Shops from '@/components/Shops/Shops'
+
+import { globalStyles as styles } from '@/app/globalStyles'
 
 const Page = () => {
   return (
@@ -19,19 +20,5 @@ const Page = () => {
     </SafeAreaView>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-      top: 100,
-      backgroundColor: Colors.lightGrey,
-  },
-  header: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginTop: 16,
-    marginBottom: 10,
-    paddingHorizontal: 16,
-  },
-})
 
 export default Page

@@ -1,12 +1,15 @@
-import { View, Text, StyleSheet } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import MapView from 'react-native-maps'
+import { useEffect, useState } from 'react'
+import { View, Text } from 'react-native'
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler'
-import Colors from '@/constants/Colors'
 import { useNavigation } from 'expo-router'
-import Autocomplete from 'react-native-autocomplete-input';
+
 import axios from 'axios';
+import MapView from 'react-native-maps'
+import Autocomplete from 'react-native-autocomplete-input';
+
+import Colors from '@/constants/Colors'
 import { Ionicons } from '@expo/vector-icons'
+import { locationSearchStyles as styles } from '@/app/(modal)/(location)/LocationSearchStyle'
 
 interface Prediction {
     description: string;
@@ -159,48 +162,5 @@ const LocationSearch = () => {
     )
 }
 
-const styles =StyleSheet.create({
-    map: {
-        flex: 1,
-    },
-    absoluteBox: {
-        position: 'absolute',
-        bottom: 20,
-        width: '100%'
-    },
-    button: {
-        backgroundColor: Colors.purple,
-        padding: 16,
-        margin: 16,
-        alignItems: 'center',
-        borderRadius: 8,
-    },
-    buttonText: {
-        color: '#fff',
-        fontWeight: 'bold',
-        fontSize: 16,
-    },
-    autocompleteListContainer: {
-        backgroundColor: '#fff',
-    },
-    autocompleteItem: {
-        padding: 12,
-        margin: 4,
-        borderBottomColor: Colors.grey,
-        borderBottomWidth: 1,
-    },
-    searchInput: {
-        backgroundColor: Colors.grey,
-        paddingLeft: 35,
-        padding: 8,
-        borderRadius: 10,
-    },
-    boxIcon: {
-        position: 'absolute',
-        left: 15,
-        top: 18,
-        zIndex: 1,
-    },
-})
 
 export default LocationSearch

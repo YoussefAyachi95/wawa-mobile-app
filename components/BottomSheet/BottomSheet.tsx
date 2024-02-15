@@ -1,10 +1,13 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text } from 'react-native'
 import React, { forwardRef, useCallback, useMemo, useState } from 'react'
-import { BottomSheetBackdrop, BottomSheetModal, useBottomSheetModal } from '@gorhom/bottom-sheet'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import Colors from '@/constants/Colors'
 import { Link } from 'expo-router'
+
+import { BottomSheetBackdrop, BottomSheetModal, useBottomSheetModal } from '@gorhom/bottom-sheet'
+
+import Colors from '@/constants/Colors'
 import { Ionicons } from '@expo/vector-icons'
+import { bottomSheetStyles as styles } from '@/components/BottomSheet/BottomSheetStyles';
 
 export type Ref = BottomSheetModal
 
@@ -78,63 +81,5 @@ const BottomSheet = forwardRef<Ref>((props, ref) => {
     )
 })
 
-const styles = StyleSheet.create({
-    contentContainer: {
-        flex: 1,
-    },
-    toggle: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        gap: 10,
-        marginBottom: 32,
-    },
-    toggleButton: {
-        padding: 8,
-        borderRadius: 32,
-        paddingHorizontal: 30,
-    },
-    toggleActive: {
-        backgroundColor: Colors.purple,
-    },
-    toggleInactive: {
-        backgroundColor: 'transparent',
-        borderWidth: 1,
-        borderColor: Colors.purple,
-    },
-    toggleButtonText: {
-        fontWeight: 'bold',
-    },
-    activeText: {
-        color: '#fff',
-    },
-    inactiveText: {
-        color: Colors.purple,
-    },
-    button: {
-        backgroundColor: Colors.purple,
-        padding: 16,
-        margin: 16,
-        borderRadius: 4,
-        alignItems: 'center',
-    },
-    buttonText: {
-        color: 'white',
-        fontWeight: 'bold',
-    },
-    subheader: {
-        fontSize:16,
-        fontWeight: '600',
-        margin: 16,
-    },
-    item: {
-        flexDirection: 'row',
-        gap: 8,
-        alignItems: 'center',
-        backgroundColor: '#fff',
-        padding: 16,
-        borderColor: Colors.grey,
-        borderWidth: 1,
-    },
-})
 
 export default BottomSheet
