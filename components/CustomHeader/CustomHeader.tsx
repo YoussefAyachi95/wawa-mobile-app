@@ -19,7 +19,7 @@ const SearchBar = () => {
                     <Ionicons style={styles.searchIcon} name='ios-search' size={20} color={Colors.medium} />
                     <TextInput style={styles.textInput} placeholder='Baby products, brands, food...' />
                 </View>
-                <Link href={'/(modal)/Filter'} asChild>
+                <Link href={'/(modal)/(filter)/Filter'} asChild>
                     <TouchableOpacity style={styles.optionButton}>
                         <Ionicons name='options-outline' size={20} color={Colors.purple} />
                     </TouchableOpacity>
@@ -54,7 +54,9 @@ const CustomHeader = () => {
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.profileButton}>
-                    <Ionicons name='person-outline' size={20} color={Colors.purple}/>
+                    <Link href={'/(modal)/(login)/Login'}>
+                        <Ionicons name='person-outline' size={20} color={Colors.purple}/>
+                    </Link>
                 </TouchableOpacity>
 
             </View>

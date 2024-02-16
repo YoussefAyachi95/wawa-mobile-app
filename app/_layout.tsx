@@ -41,6 +41,38 @@ export default function RootLayoutNav() {
           }}
        />
        <Stack.Screen 
+          name='(modal)/(login)/Login'
+          options={{
+            presentation: 'modal',
+            headerTitle: 'Login',
+            headerShadowVisible: false,
+            headerStyle: {
+              backgroundColor: Colors.lightGrey,
+            },
+            headerLeft: () => (
+              <TouchableOpacity onPress={() => {navigation.goBack()}}>
+                <Ionicons name='close-outline' size={28} color={Colors.purple} />
+              </TouchableOpacity>
+            )
+          }}
+       />
+       <Stack.Screen 
+          name='(modal)/(register)/Register'
+          options={{
+            presentation: 'modal',
+            headerTitle: 'Register',
+            headerShadowVisible: false,
+            headerStyle: {
+              backgroundColor: Colors.lightGrey,
+            },
+            headerLeft: () => (
+              <TouchableOpacity onPress={() => {navigation.goBack()}}>
+                <Ionicons name='close-outline' size={28} color={Colors.purple} />
+              </TouchableOpacity>
+            )
+          }}
+       />
+       <Stack.Screen 
           name='(modal)/(location)/LocationSearch'
           options={{
             presentation: 'fullScreenModal',
