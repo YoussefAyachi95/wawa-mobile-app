@@ -1,29 +1,44 @@
-import Colors from '@/constants/Colors';
 import { useNavigation } from 'expo-router';
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 
+import supabase from '@/util/supabase';
+import { useAuthStore } from '@/context/authenticationStore';
+
+import Colors from '@/constants/Colors';
+
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { setUser } = useAuthStore();
   const router = useNavigation()
   const [error, setError] = useState('');
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!email || !password) {
         setError('Please fill out all fields');
         return;
     }
-    // Add your login logic here
-    console.log('Logging in with:', email, password);
-    // For now, just navigate to a different screen
-    router.navigate('index' as never);
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        setError((error as Error).message); 
+      } else if (data?.user) {
+        setUser(data.user);
+        router.navigate('index' as never);
+      } else {
+        setError('User not found');
+      }
+    } catch (error) {
+      setError('An error occurred during login. Please try again.');
+    }
   };
 
   const handleSignUp = () => {
-    // Add your sign up logic here
-    console.log('Signing up');
-    // For now, just navigate to a different screen
     router.navigate('(modal)/(register)/Register' as never);
   };
 
