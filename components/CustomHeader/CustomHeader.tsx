@@ -2,7 +2,8 @@ import { View, Text, Image } from 'react-native'
 import React, { useRef } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler'
-import { Link } from 'expo-router'
+import { Link, useNavigation } from 'expo-router'
+import { useAuthStore } from '@/context/authenticationStore'
 
 import BottomSheet from '@/components/BottomSheet/BottomSheet'
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
@@ -31,11 +32,22 @@ const SearchBar = () => {
 
 const CustomHeader = () => {
     const bottomSheetRef = useRef<BottomSheetModal>(null)
+    const navigation = useNavigation(); 
+    const { user } = useAuthStore();
 
+    console.log(user)
 
     const openModal = () => {
         bottomSheetRef.current?.present()
     }
+
+    const handleProfilePress = () => {
+        if (user) {
+            navigation.navigate('(modal)/(profile)/Profile' as never); 
+        } else {
+            navigation.navigate('(modal)/(login)/Login' as never);
+        }
+    };
 
     return (
         <SafeAreaView style={styles.safeArea}>
@@ -53,11 +65,15 @@ const CustomHeader = () => {
                     </View>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.profileButton}>
-                    <Link href={'/(modal)/(login)/Login'}>
+                {user && user !== null ? (
+                    <TouchableOpacity style={styles.profileButton} onPress={handleProfilePress}>
                         <Ionicons name='person-outline' size={20} color={Colors.purple}/>
-                    </Link>
-                </TouchableOpacity>
+                    </TouchableOpacity>
+                ) : (
+                    <TouchableOpacity style={styles.profileButton} onPress={handleProfilePress}>
+                        <Ionicons name='log-in-outline' size={20} color={Colors.purple}/>
+                    </TouchableOpacity>
+                )}
 
             </View>
         <SearchBar />
