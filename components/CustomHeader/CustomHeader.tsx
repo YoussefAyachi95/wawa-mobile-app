@@ -35,7 +35,6 @@ const CustomHeader = () => {
     const navigation = useNavigation(); 
     const { user } = useAuthStore();
 
-    console.log(user)
 
     const openModal = () => {
         bottomSheetRef.current?.present()
@@ -65,7 +64,7 @@ const CustomHeader = () => {
                     </View>
                 </TouchableOpacity>
 
-                {user && user !== null ? (
+                {user ? (
                     <TouchableOpacity style={styles.profileButton} onPress={handleProfilePress}>
                         <Ionicons name='person-outline' size={20} color={Colors.purple}/>
                     </TouchableOpacity>
