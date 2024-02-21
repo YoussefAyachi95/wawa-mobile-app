@@ -2,6 +2,7 @@
   "name": "wolt-clone",
   "main": "expo-router/entry",
   "version": "1.0.0",
+  "type": "module",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
@@ -23,6 +24,7 @@
     "expo": "~49.0.18",
     "expo-font": "~11.4.0",
     "expo-haptics": "~12.4.0",
+    "expo-image-picker": "~14.3.2",
     "expo-linking": "~5.0.2",
     "expo-router": "^2.0.0",
     "expo-splash-screen": "~0.20.5",
@@ -42,8 +44,7 @@
     "react-native-screens": "~3.22.0",
     "react-native-url-polyfill": "^2.0.0",
     "react-native-web": "~0.19.6",
-    "zustand": "^4.5.0",
-    "expo-image-picker": "~14.3.2"
+    "zustand": "^4.5.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
