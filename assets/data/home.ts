@@ -1,17 +1,3 @@
-export const categories = [
-    { name: "Diapers", img: require('@/assets/images/categories/diapers.webp') },
-    { name: "Baby Food", img: require('@/assets/images/categories/baby-food.png')},
-    { name: "Clothing", img: require('@/assets/images/categories/baby-clothes.jpg')},
-    { name: "Toys", img: require('@/assets/images/categories/toys.jpg') },
-    { name: "Nursery", img: require('@/assets/images/categories/nursery.jpg') },
-    { name: "Baby Gear", img: require('@/assets/images/categories/baby-gear.jpg') },
-    { name: "Feeding Supplies", img: require('@/assets/images/categories/feeding-supplies.jpg') },
-    { name: "Health & Safety", img: require('@/assets/images/categories/baby-health.jpg') },
-    { name: "Bathing & Skincare", img: require('@/assets/images/categories/bathing.jpg') },
-    { name: "Books & Learning", img: require('@/assets/images/categories/baby-books.jpg') },
-    { name: "Travel Accessories", img: require('@/assets/images/categories/baby-travel.jpg') }
-];
-
 export const shops = [
     { 
         name: "Wawa", 
