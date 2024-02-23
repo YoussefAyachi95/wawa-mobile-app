@@ -10,6 +10,7 @@ import * as ImagePicker from 'expo-image-picker';
 import Colors from '@/constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
 
+
 const Profile = () => {
   const router = useNavigation()
   const { user, setUser } = useAuthStore();
@@ -44,8 +45,37 @@ const Profile = () => {
       quality: 1,
     });
 
+    
     if (!result.canceled) {
-      setAvatarURI(result.assets[0].uri);
+      try {
+        const fileName = `${user.id}.${result.assets[0].uri.split('.').pop()}`;
+        const filePath = result.assets[0].uri;
+        const { data, error } = await supabase.storage
+          .from('avatars')
+          .upload(fileName, filePath, { contentType: `image/${result.assets[0].uri.split('.').pop()}` });
+        if (error) {
+          throw new Error(error.message);
+        }
+  
+        const imageURL = await supabase.storage.from('avatars').getPublicUrl(fileName);
+        if (!imageURL.data.publicUrl) {
+          console.error('Error getting image URL for avatar');
+          return;
+        }
+  
+        const { data: updatedUser, error: updateError } = await supabase
+          .from('User')
+          .update({ avatar: imageURL.data.publicUrl })
+          .eq('id', user.id);
+        if (updateError) {
+          throw new Error(updateError.message);
+        }
+  
+        setAvatarURI(imageURL.data.publicUrl);
+        console.log('Avatar uploaded and updated successfully');
+      } catch (error) {
+        console.error('Error uploading avatar:', error);
+      }
     }
   };
 
