@@ -1,5 +1,5 @@
 import { View, Text, Image } from 'react-native'
-import React, { useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler'
 import { Link, useNavigation } from 'expo-router'
@@ -11,6 +11,8 @@ import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import { Ionicons } from '@expo/vector-icons'
 import Colors from '@/constants/Colors'
 import { customHeaderStyles as styles } from '@/components/CustomHeader/CustomHeaderStyles';
+import useLocationStore from '@/context/locationStore'
+import axios from 'axios'
 
 const SearchBar = () => {
     return (
@@ -34,6 +36,46 @@ const CustomHeader = () => {
     const bottomSheetRef = useRef<BottomSheetModal>(null)
     const navigation = useNavigation(); 
     const { user } = useAuthStore();
+    const { selectedLocation } = useLocationStore();
+    const [cityName, setCityName] = useState<string>('');
+
+    useEffect(() => {
+        if (selectedLocation) {
+            fetchCityName(selectedLocation.latitude, selectedLocation.longitude);
+        }
+    }, [selectedLocation]);
+
+    const fetchCityName = async (latitude: number, longitude: number) => {
+        try {
+            const options = {
+                method: 'GET',
+                url: 'https://trueway-geocoding.p.rapidapi.com/ReverseGeocode',
+                params: {
+                    location: `${latitude},${longitude}`,
+                    language: 'en'
+                },
+                headers: {
+                    'X-RapidAPI-Key': process.env.EXPO_PUBLIC_RAPID_API_KEY,
+                    'X-RapidAPI-Host': process.env.EXPO_PUBLIC_RAPID_API_TRUEWAY_HOST
+                }
+            };
+
+            const response = await axios.request(options);
+            if (response.data && response.data.results && response.data.results.length > 0) {
+                const formattedAddress = formatAddress(response.data);
+                setCityName(formattedAddress);
+            }
+        } catch (error) {
+            console.error('Error fetching city name:', error);
+        }
+    };
+
+    const formatAddress = (data: any) => {
+        const address = data.results[0];
+        if (!address) return '';
+        const city = address.locality || address.area || '';
+        return `${city}`;
+    };
 
 
     const openModal = () => {
@@ -59,8 +101,14 @@ const CustomHeader = () => {
                 <TouchableOpacity style={styles.titleContainer} onPress={openModal}>
                     <Text style={styles.title}>Delivery - Now</Text>
                     <View style={styles.locationName}>
-                        <Text style={styles.subtitle}>Köln</Text>
-                        <Ionicons name='chevron-down' size={20} color={Colors.purple} />
+                    {cityName ? (
+                            <>
+                                <Text style={styles.subtitle}>{cityName}</Text>
+                                <Ionicons name='chevron-down' size={20} color={Colors.purple} />
+                            </>
+                        ) : (
+                            <Text style={styles.subtitle}>No location selected</Text>
+                    )}
                     </View>
                 </TouchableOpacity>
 
