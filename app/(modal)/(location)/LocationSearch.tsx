@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { View, Text } from 'react-native'
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler'
 import { useNavigation } from 'expo-router'
+import { requestForegroundPermissionsAsync, getCurrentPositionAsync } from 'expo-location';
+
 
 import axios from 'axios';
 import MapView from 'react-native-maps'
@@ -10,6 +12,7 @@ import Autocomplete from 'react-native-autocomplete-input';
 import Colors from '@/constants/Colors'
 import { Ionicons } from '@expo/vector-icons'
 import { locationSearchStyles as styles } from '@/app/(modal)/(location)/LocationSearchStyle'
+import useLocationStore from '@/context/locationStore';
 
 interface Prediction {
     description: string;
@@ -33,14 +36,37 @@ interface Geometry {
 const LocationSearch = () => {
     const navigation = useNavigation()
     const [location, setLocation] = useState<Location>({
-        latitude: 51.5078788,
-        longitude: -0.0877321,
+        latitude: 0,
+        longitude: 0,
         latitudeDelta: 0.02,
         longitudeDelta: 0.02,
-    })
+    });
     const [query, setQuery] = useState<string>('');
     const [suggestions, setSuggestions] = useState<string[]>([]);
     const [isTyping, setIsTyping] = useState<boolean>(false);
+
+    useEffect(() => {
+        fetchUserLocation();
+      }, []);
+    
+      const fetchUserLocation = async () => {
+        const { status } = await requestForegroundPermissionsAsync();
+        if (status === 'granted') {
+          const { coords } = await getCurrentPositionAsync({});
+          setLocation({
+            latitude: coords.latitude,
+            longitude: coords.longitude,
+            latitudeDelta: 0.02,
+            longitudeDelta: 0.02,
+          });
+          useLocationStore.getState().setSelectedLocation({
+            latitude: coords.latitude,
+            longitude: coords.longitude,
+            latitudeDelta: 0.02,
+            longitudeDelta: 0.02,
+          });
+        }
+      };
 
     useEffect(() => {
         const debounce = setTimeout(() => {
@@ -109,6 +135,7 @@ const LocationSearch = () => {
                     latitudeDelta: 0.02,
                     longitudeDelta: 0.02
                 });
+                useLocationStore.getState().setSelectedLocation(location);
             }
         } catch (error) {
             console.error(error);
