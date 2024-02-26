@@ -10,7 +10,6 @@ import * as ImagePicker from 'expo-image-picker';
 import Colors from '@/constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
 
-
 const Profile = () => {
   const router = useNavigation()
   const { user, setUser } = useAuthStore();
@@ -44,7 +43,6 @@ const Profile = () => {
       aspect: [1, 1],
       quality: 1,
     });
-
     
     if (!result.canceled) {
       try {
@@ -62,7 +60,7 @@ const Profile = () => {
           console.error('Error getting image URL for avatar');
           return;
         }
-  
+          
         const { data: updatedUser, error: updateError } = await supabase
           .from('User')
           .update({ avatar: imageURL.data.publicUrl })
@@ -73,6 +71,7 @@ const Profile = () => {
   
         setAvatarURI(imageURL.data.publicUrl);
         console.log('Avatar uploaded and updated successfully');
+        console.log(imageURL.data.publicUrl)
       } catch (error) {
         console.error('Error uploading avatar:', error);
       }
