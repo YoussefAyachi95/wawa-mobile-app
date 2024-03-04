@@ -129,18 +129,19 @@ const LocationSearch = () => {
             if (response.data && response.data.candidates && response.data.candidates.length > 0) {
                 const candidate = response.data.candidates[0];
                 const { lat, lng } = candidate.geometry.location;
-                setLocation({
+                const selectedLocation = {
                     latitude: lat,
                     longitude: lng,
                     latitudeDelta: 0.02,
                     longitudeDelta: 0.02
-                });
-                useLocationStore.getState().setSelectedLocation(location);
+                };
+                useLocationStore.getState().setSelectedLocation(selectedLocation);
             }
         } catch (error) {
             console.error(error);
         }
     };
+
 
     return (
         <View style={{ flex: 1 }}>
