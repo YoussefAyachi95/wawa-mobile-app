@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Image, ListRenderItem, SectionList, Text, View } from 'react-native'
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -13,7 +13,13 @@ import { detailsStyles as styles } from '@/app/(details)/detailsStyle'
 import { Ionicons } from '@expo/vector-icons'
 import Colors from '@/constants/Colors'
 
-import { shop } from '@/assets/data/shop'
+import fetchProductsFromSupabase, { Product } from '@/hooks/useFetchProduct'
+import useShopStore from '@/context/shopsStore'
+
+interface SectionData {
+    title: number;
+    data: Product[];
+}
 
 const Details = () => {
     const navigation = useNavigation()
@@ -21,17 +27,44 @@ const Details = () => {
     const scrollRef = useRef<ScrollView>(null)
     const itemsRef = useRef<View[]>([])
     const { items, total } = useBasketStore()
+    const [products, setProducts] = useState<Product[]>([]);
+    const { shops, fetchShops } = useShopStore();
+
     
     const opacity = useSharedValue(0)
     const animatedStyles = useAnimatedStyle(() => ({
         opacity: opacity.value
     }))
 
-    const DATA = shop.products.map((item, index) => ({
-        title: item.category,
-        data: item.items,
-        index,
-    }))
+    useEffect(() => {
+        const fetchProducts = async () => {
+          try {
+            const fetchedProducts = await fetchProductsFromSupabase();
+            setProducts(fetchedProducts);
+          } catch (error) {
+            console.error('Error fetching products:', error);
+          }
+        };
+    
+        fetchShops()
+        fetchProducts();
+      }, []);
+
+
+      const DATA: SectionData[] = products.reduce((acc: SectionData[], item: Product, index: number) => {
+        const existingSectionIndex = acc.findIndex(section => section.title === item.categoryId);
+        
+        if (existingSectionIndex !== -1) {
+            acc[existingSectionIndex].data.push(item);
+        } else {
+            acc.push({
+                title: item.categoryId,
+                data: [item],
+            });
+        }
+    
+        return acc;
+    }, []);
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -54,7 +87,7 @@ const Details = () => {
         })
     }, [])
 
-    const renderItem: ListRenderItem<any> = ({ item, index }) => (
+    const renderItem: ListRenderItem<any> = ({ item }) => (
         <Link href={{ pathname: '/(modal)/(product)/Product', params: { id: item.id } }} asChild>
             <TouchableOpacity style={styles.productDetail}>
                 <View style={{ flex: 1 }}>
@@ -91,6 +124,9 @@ const Details = () => {
         }
     }
 
+    const shop = shops[0]
+
+
     return (
         <>
             <ParallaxScrollView 
@@ -99,7 +135,7 @@ const Details = () => {
                 backgroundColor={'#fff'}
                 parallaxHeaderHeight={250}
                 stickyHeaderHeight={100}
-                renderBackground={() => <Image source={shop.img} style={{ height: 300, width: '100%'}} />}
+                renderBackground={() => <Image source={{ uri: shop.img }} style={{ height: 300, width: '100%'}} />}
                 contentBackgroundColor={Colors.lightGrey}
                 renderStickyHeader={() => (
                     <View key='sticky-header' style={styles.stickySection}>
@@ -123,7 +159,7 @@ const Details = () => {
                         scrollEnabled={false}
                         sections={DATA} 
                         renderItem={renderItem} 
-                        renderSectionHeader={({ section: {title, index}}) => 
+                        renderSectionHeader={({ section: {title} }) => 
                             <Text style={styles.sectionHeader}>{title}</Text>
                         }
                         SectionSeparatorComponent={() => 
@@ -144,7 +180,7 @@ const Details = () => {
                             showsHorizontalScrollIndicator={false}
                             contentContainerStyle={styles.segmentScrollView}
                         >
-                        {shop.products.map((item, index) => (
+                        {products.map((item, index) => (
                             <TouchableOpacity
                             key={index}
                             style={activeIndex === index ? styles.segmentsButtonActive : styles.segmentsButtonInactive}
@@ -152,7 +188,7 @@ const Details = () => {
                             >
                             <View ref={ref => itemsRef.current[index] = ref!}>
                                 <Text style={activeIndex === index ? styles.segmentsTextActive : styles.segmentsTextInactive}>
-                                    {item.category}
+                                    {item.categoryId}
                                 </Text>
                             </View>
                         </TouchableOpacity>
