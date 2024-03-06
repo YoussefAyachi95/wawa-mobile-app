@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { View, Text, Image } from 'react-native'
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
 import { Link } from 'expo-router'
@@ -5,9 +6,15 @@ import { Link } from 'expo-router'
 import Colors from '@/constants/Colors'
 import { shopsStyles as styles } from '@/components/Shops/ShopsStyle';
 
-import { shops } from '@/assets/data/home'
+import useShopStore from '@/context/shopsStore';
 
 const Shops = () => {
+  const { shops, fetchShops } = useShopStore();
+
+  useEffect(() => {
+    fetchShops();
+  }, []);
+
   return (
     <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ padding: 15 }}>
         {
@@ -15,7 +22,7 @@ const Shops = () => {
               <Link href={'/details'} key={index} asChild>
                 <TouchableOpacity>
                     <View style={styles.categoryCard}>
-                        <Image source={shop.img} style={styles.image} />
+                        <Image source={{ uri: shop.img }} style={styles.image} />
                         <View style={styles.categoryBox}>
                             <Text style={styles.categoryText}>
                                 {shop.name}
