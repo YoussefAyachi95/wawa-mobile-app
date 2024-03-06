@@ -44,3 +44,4 @@ expo-env.d.ts
 # seed
 userSeed.js
 createCategoryBucket.js
+createShops.js
