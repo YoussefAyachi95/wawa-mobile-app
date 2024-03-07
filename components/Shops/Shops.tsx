@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { View, Text, Image } from 'react-native'
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
 import { Link } from 'expo-router'
@@ -7,6 +7,7 @@ import Colors from '@/constants/Colors'
 import { shopsStyles as styles } from '@/components/Shops/ShopsStyle';
 
 import useShopStore from '@/context/shopsStore';
+import { truncateString } from '@/util/truncateString';
 
 const Shops = () => {
   const { shops, fetchShops } = useShopStore();
@@ -25,13 +26,13 @@ const Shops = () => {
                         <Image source={{ uri: shop.img }} style={styles.image} />
                         <View style={styles.categoryBox}>
                             <Text style={styles.categoryText}>
-                                {shop.name}
+                                {shop.name} - {truncateString(shop.location, 30)}
                             </Text>
                             <Text style={{ color: Colors.green }}>
-                                {shop.rating}  ({shop.ratings})
+                                {`${shop.rating} ⭐`}  ({`${shop.ratings} reviews`})
                             </Text>
                             <Text style={{ color: Colors.medium }}>
-                                {shop.distance}
+                                {`${shop.distance} km away from you`}
                             </Text>
                         </View>
                     </View>
