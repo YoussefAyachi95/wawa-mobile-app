@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { View, Text } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -7,19 +8,29 @@ import Animated, { FadeIn, FadeInLeft } from 'react-native-reanimated'
 import * as Haptics from 'expo-haptics'
 
 import useBasketStore from '@/context/basketStore'
+import fetchProductsFromSupabase, { Product as ProductType } from '@/hooks/useFetchProduct'
 
 import { productStyles as styles } from '@/app/(modal)/(product)/ProductStyle'
 
-import { getProductById } from '@/util/getProductById'
 
 
 const Product = () => {
     const { id } = useLocalSearchParams()
-    const item = getProductById(+id)!
+    const [item, setItem] = useState<ProductType | null>(null)
     const router = useRouter()
     const { addProduct } = useBasketStore()
 
+    useEffect(() => {
+        const fetchProduct = async () => {
+            const products = await fetchProductsFromSupabase();
+            const product = products.find(p => p.id === +id);
+            setItem(product || null);
+        };
+        fetchProduct();
+    }, [id]);
+
     const addToCart = () => {
+        if (!item) return; 
         addProduct(item)
         Haptics.notificationAsync(
             Haptics.NotificationFeedbackType.Success
@@ -27,13 +38,18 @@ const Product = () => {
         router.back()
     }
 
+    if (!item) {
+        return null; 
+    }
+
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }} edges={['bottom']}>
             <View style={styles.container}>
                 <Animated.Image 
                     entering={FadeIn.duration(400).delay(200)}
                     style={styles.img} 
-                    source={item?.img} 
+                    source={{ uri: item.img }} 
                 />
                 <View style={{ padding: 20}}>
                     <Animated.Text 
