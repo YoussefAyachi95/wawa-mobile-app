@@ -15,6 +15,7 @@ import Colors from '@/constants/Colors'
 
 import fetchProductsFromSupabase, { Product } from '@/hooks/useFetchProduct'
 import useShopStore from '@/context/shopsStore'
+import { getCategoryNameById } from '@/util/getCategoryNameById'
 
 interface SectionData {
     title: number;
@@ -96,7 +97,7 @@ const Details = () => {
                     <Text style={styles.itemName}>{item.price} €</Text>
                 </View>
                 <View>
-                    <Image source={item.img} style={styles.displayImg} />
+                    <Image source={{ uri: item.img }} style={styles.displayImg} />
                 </View>
             </TouchableOpacity>
         </Link>
@@ -160,7 +161,7 @@ const Details = () => {
                         sections={DATA} 
                         renderItem={renderItem} 
                         renderSectionHeader={({ section: {title} }) => 
-                            <Text style={styles.sectionHeader}>{title}</Text>
+                            <Text style={styles.sectionHeader}>{getCategoryNameById(title)}</Text>
                         }
                         SectionSeparatorComponent={() => 
                             <View style={{ height: 1, backgroundColor: Colors.grey}} />
@@ -188,7 +189,7 @@ const Details = () => {
                             >
                             <View ref={ref => itemsRef.current[index] = ref!}>
                                 <Text style={activeIndex === index ? styles.segmentsTextActive : styles.segmentsTextInactive}>
-                                    {item.categoryId}
+                                    {getCategoryNameById(item.categoryId)}
                                 </Text>
                             </View>
                         </TouchableOpacity>
